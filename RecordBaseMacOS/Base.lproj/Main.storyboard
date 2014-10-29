@@ -21,7 +21,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                            <connections>
+                                                <segue destination="T6X-fB-Oh4" kind="show" id="iQQ-ja-3uP"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -644,7 +648,67 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="RecordBaseMacOS" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="476.5" y="-255"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="tP2-TF-SS7">
+            <objects>
+                <windowController id="T6X-fB-Oh4" customClass="PreferenceWindowController" customModule="RecordBaseMacOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="VPl-jJ-7CM">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="78" y="240" width="545" height="147"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <toolbar key="toolbar" implicitIdentifier="9376250A-6038-4220-AD8C-DC7588EAB678" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="OAW-Ce-C4P">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="D480D6A0-A0B3-4068-9EC2-DE74AE6B49A5" explicitItemIdentifier="general" label="General" paletteLabel="General" tag="-1" image="toolbar-computer" selectable="YES" id="H2C-Dk-Uqe">
+                                    <connections>
+                                        <action selector="toolbarClicked:" target="T6X-fB-Oh4" id="7CI-Vv-yfN"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="224F7915-0FCA-4E9B-AFA1-CFEB094689B9" explicitItemIdentifier="other" label="Other" paletteLabel="Other" tag="-1" image="toolbar-question" selectable="YES" id="aWp-wN-8G9">
+                                    <connections>
+                                        <action selector="toolbarClicked:" target="T6X-fB-Oh4" id="nfE-pO-PSN"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="H2C-Dk-Uqe"/>
+                                <toolbarItem reference="aWp-wN-8G9"/>
+                            </defaultToolbarItems>
+                        </toolbar>
+                    </window>
+                    <connections>
+                        <segue destination="gSz-ST-GYt" kind="relationship" relationship="window.shadowedContentViewController" id="4zz-Lu-zIy"/>
+                    </connections>
+                </windowController>
+                <customObject id="RlO-B0-k6J" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="377.5" y="121.5"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="1BW-Rp-R5D">
+            <objects>
+                <viewController id="gSz-ST-GYt" sceneMemberID="viewController">
+                    <view key="view" id="SKu-hm-PZD">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <box autoresizesSubviews="NO" fixedFrame="YES" title="Box" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="UJJ-ZW-fhM">
+                                <rect key="frame" x="-3" y="-4" width="456" height="304"/>
+                                <view key="contentView">
+                                    <rect key="frame" x="1" y="1" width="454" height="288"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </box>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="jq3-Uy-ghJ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="377" y="465"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -653,7 +717,7 @@
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+                        <rect key="contentRect" x="196" y="240" width="182" height="118"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                     </window>
                     <connections>
@@ -662,18 +726,18 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="235"/>
+            <point key="canvasLocation" x="-357" y="-7"/>
         </scene>
         <!--Item Table View Controller-->
         <scene sceneID="kkk-d0-MgC">
             <objects>
                 <viewController id="N3p-TT-RJi" customClass="ItemTableViewController" customModule="RecordBaseMacOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="tbo-Hr-JpQ">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="578" height="379"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Fn-oC-S4O">
-                                <rect key="frame" x="105" y="0.0" width="240" height="300"/>
+                                <rect key="frame" x="105" y="0.0" width="368" height="379"/>
                                 <clipView key="contentView" id="NlL-Jd-JJc">
                                     <rect key="frame" x="1" y="0.0" width="238" height="134"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -685,7 +749,7 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="235" minWidth="40" maxWidth="1000" id="unI-mo-WSF">
+                                                <tableColumn width="363" minWidth="40" maxWidth="1000" id="unI-mo-WSF">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -699,7 +763,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="mKA-fj-wZG">
-                                                            <rect key="frame" x="1" y="1" width="235" height="17"/>
+                                                            <rect key="frame" x="1" y="1" width="363" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MS0-km-ycN">
@@ -753,7 +817,11 @@
                 </viewController>
                 <customObject id="BuU-fP-9i9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="662"/>
+            <point key="canvasLocation" x="-357" y="413.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="toolbar-computer" width="24" height="24"/>
+        <image name="toolbar-question" width="24" height="24"/>
+    </resources>
 </document>

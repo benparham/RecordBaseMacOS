@@ -13,6 +13,11 @@
 		80BCA03019FEB1820076EA65 /* RecordBaseMacOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BCA02F19FEB1820076EA65 /* RecordBaseMacOSTests.swift */; };
 		80BCA03B19FF5C530076EA65 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BCA03A19FF5C530076EA65 /* Item.swift */; };
 		80BCA03D19FF5D280076EA65 /* ItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BCA03C19FF5D280076EA65 /* ItemTableViewController.swift */; };
+		80CB676F1A0084180088FB81 /* PreferenceWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB676E1A0084180088FB81 /* PreferenceWindowController.swift */; };
+		80CB677A1A00CAA30088FB81 /* PreferenceGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB67781A00CAA30088FB81 /* PreferenceGeneralViewController.swift */; };
+		80CB677B1A00CAA30088FB81 /* PreferenceGeneralViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 80CB67791A00CAA30088FB81 /* PreferenceGeneralViewController.xib */; };
+		80CB677E1A00CAE80088FB81 /* PreferenceOtherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB677C1A00CAE80088FB81 /* PreferenceOtherViewController.swift */; };
+		80CB677F1A00CAE80088FB81 /* PreferenceOtherViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 80CB677D1A00CAE80088FB81 /* PreferenceOtherViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +41,11 @@
 		80BCA02F19FEB1820076EA65 /* RecordBaseMacOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBaseMacOSTests.swift; sourceTree = "<group>"; };
 		80BCA03A19FF5C530076EA65 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		80BCA03C19FF5D280076EA65 /* ItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemTableViewController.swift; sourceTree = "<group>"; };
+		80CB676E1A0084180088FB81 /* PreferenceWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceWindowController.swift; sourceTree = "<group>"; };
+		80CB67781A00CAA30088FB81 /* PreferenceGeneralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceGeneralViewController.swift; sourceTree = "<group>"; };
+		80CB67791A00CAA30088FB81 /* PreferenceGeneralViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceGeneralViewController.xib; sourceTree = "<group>"; };
+		80CB677C1A00CAE80088FB81 /* PreferenceOtherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceOtherViewController.swift; sourceTree = "<group>"; };
+		80CB677D1A00CAE80088FB81 /* PreferenceOtherViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceOtherViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,11 +87,11 @@
 		80BCA01919FEB1820076EA65 /* RecordBaseMacOS */ = {
 			isa = PBXGroup;
 			children = (
-				80BCA03919FF55620076EA65 /* ViewControllers */,
+				80CB67801A00D11A0088FB81 /* Interface */,
+				80BCA03919FF55620076EA65 /* Controllers */,
 				80BCA01C19FEB1820076EA65 /* AppDelegate.swift */,
 				80BCA02019FEB1820076EA65 /* Images.xcassets */,
 				80BCA03A19FF5C530076EA65 /* Item.swift */,
-				80BCA02219FEB1820076EA65 /* Main.storyboard */,
 				80BCA01A19FEB1820076EA65 /* Supporting Files */,
 			);
 			path = RecordBaseMacOS;
@@ -112,12 +122,25 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		80BCA03919FF55620076EA65 /* ViewControllers */ = {
+		80BCA03919FF55620076EA65 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				80BCA03C19FF5D280076EA65 /* ItemTableViewController.swift */,
+				80CB676E1A0084180088FB81 /* PreferenceWindowController.swift */,
+				80CB67781A00CAA30088FB81 /* PreferenceGeneralViewController.swift */,
+				80CB677C1A00CAE80088FB81 /* PreferenceOtherViewController.swift */,
 			);
-			name = ViewControllers;
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		80CB67801A00D11A0088FB81 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				80CB677D1A00CAE80088FB81 /* PreferenceOtherViewController.xib */,
+				80CB67791A00CAA30088FB81 /* PreferenceGeneralViewController.xib */,
+				80BCA02219FEB1820076EA65 /* Main.storyboard */,
+			);
+			name = Interface;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,7 +223,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80CB677B1A00CAA30088FB81 /* PreferenceGeneralViewController.xib in Resources */,
 				80BCA02119FEB1820076EA65 /* Images.xcassets in Resources */,
+				80CB677F1A00CAE80088FB81 /* PreferenceOtherViewController.xib in Resources */,
 				80BCA02419FEB1820076EA65 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,9 +244,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80CB677E1A00CAE80088FB81 /* PreferenceOtherViewController.swift in Sources */,
+				80CB676F1A0084180088FB81 /* PreferenceWindowController.swift in Sources */,
 				80BCA03B19FF5C530076EA65 /* Item.swift in Sources */,
 				80BCA03D19FF5D280076EA65 /* ItemTableViewController.swift in Sources */,
 				80BCA01D19FEB1820076EA65 /* AppDelegate.swift in Sources */,
+				80CB677A1A00CAA30088FB81 /* PreferenceGeneralViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +437,7 @@
 				80BCA03519FEB1820076EA65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		80BCA03619FEB1820076EA65 /* Build configuration list for PBXNativeTarget "RecordBaseMacOSTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +446,7 @@
 				80BCA03819FEB1820076EA65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
