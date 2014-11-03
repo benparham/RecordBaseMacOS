@@ -62,6 +62,64 @@ class MDSMusic: NSObject {
         
         self.init(artists: MDSArtist.artistsFromMusicElement(musicElement: element))
     }
+    
+    // Children Getters
+    // -- Single
+    func getArtist(artistId: MDSArtistId) -> MDSArtist {
+        return artists[artistId]
+    }
+    func getAlbum(albumId: MDSAlbumId) -> MDSAlbum {
+        return getArtist(MDSData.getArtistId(albumId)).getAlbum(albumId, ignoreAssert: true)
+    }
+    func getSong(songId: MDSSongId) -> MDSSong {
+        return getAlbum(MDSData.getAlbumId(songId)).getSong(songId, ignoreAssert: true)
+    }
+    // -- Multiple
+    class ArtistIterator: MDSArtistIterator {
+        private var artistsIdx: Int
+        private var artistsList: [MDSArtist]
+        
+        init(artistsList: [MDSArtist], startIdx: Int = 0) {
+            self.artistsIdx = startIdx
+            self.artistsList = artistsList
+        }
+        
+        func next() -> MDSArtist? {
+            return (artistsIdx < artistsList.count) ? artistsList[artistsIdx] : nil
+        }
+    }
+    func getArtists() -> MDSArtistIterator {
+        return ArtistIterator(artistsList: artists)
+    }
+    class AlbumIterator: MDSAlbumIterator {
+        private var artistsIdx: Int
+        private var artistsList: [MDSArtist]
+        private var innerIterator: MDSAlbumIterator
+        
+        init(artistsList: [MDSArtist], startIdx: Int = 0) {
+            // TODO: replace this with having innerIterator be optional and checking accordingly
+            assert(startIdx < artistsList.count)
+            
+            self.artistsIdx = startIdx
+            self.artistsList = artistsList
+            self.innerIterator = self.artistsList[self.artistsIdx++].getAlbums()
+        }
+        
+        func next() -> MDSAlbum? {
+            var result: MDSAlbum? = innerIterator.next()
+            while result == nil {
+                
+                if artistsIdx >= artistsList.count {
+                    return nil
+                }
+                
+                innerIterator = artistsList[artistsIdx++].getAlbums()
+                result = innerIterator.next()
+            }
+            
+            return result
+        }
+    }
 }
 
 class MDSArtist: MDSData {
@@ -99,18 +157,60 @@ class MDSArtist: MDSData {
     }
     func getSong(songId: MDSSongId, ignoreAssert: Bool = false) -> MDSSong {
         if !ignoreAssert { assert(MDSData.getArtistId(songId) == id) }
-        return getAlbum(MDSSong.getAlbumId(songId)).getSong(songId, ignoreAssert: true)
+        return getAlbum(MDSData.getAlbumId(songId)).getSong(songId, ignoreAssert: true)
     }
-    func getAlbums() -> [MDSAlbum] {
-        return albums
+    class AlbumIterator: MDSAlbumIterator {
+        private var albumsIdx: Int
+        private var albumsList: [MDSAlbum]
+        
+        init(albumsList: [MDSAlbum], startIdx: Int = 0) {
+            self.albumsIdx = startIdx
+            self.albumsList = albumsList
+        }
+        
+        func next() -> MDSAlbum? {
+            return (albumsIdx < albumsList.count) ? albumsList[albumsIdx++] : nil
+        }
     }
-    /*
-     * Deliberately don't have a getSongs() method. Would require constructing a new
-     * array for concatenation of all "songs" arrays in albums. This is a bad (memory wasting)
-     * idea and should be discouraged. If you really want this, do it yourself
-     *
-     * ??? Maybe give an iterator class for this ???
-     */
+    func getAlbums() -> MDSAlbumIterator {
+        return AlbumIterator(albumsList: albums)
+    }
+    class SongIterator: MDSSongIterator {
+        private var albumsIdx: Int
+        private var albumsList: [MDSAlbum]
+        private var innerIterator: MDSSongIterator
+        
+        init(albumsList: [MDSAlbum], startIdx: Int = 0) {
+            // TODO: replace this with having innerIterator be optional and checking accordingly
+            assert(startIdx < albumsList.count)
+            
+            self.albumsIdx = startIdx
+            self.albumsList = albumsList
+            self.innerIterator = self.albumsList[self.albumsIdx++].getSongs()
+        }
+        
+        func next() -> MDSSong? {
+            var result: MDSSong? = innerIterator.next()
+            while result == nil {
+                
+                if albumsIdx >= albumsList.count {
+                    return nil
+                }
+                
+                innerIterator = albumsList[albumsIdx++].getSongs()
+                result = innerIterator.next()
+            }
+            
+            return result
+        }
+    }
+    func getSongs() -> MDSSongIterator {
+        return SongIterator(albumsList: albums)
+    }
+    
+    
+    // Children Setters
+    // TODO
     
     
     class func artistsFromMusicElement(#musicElement: NSXMLElement) -> [MDSArtist] {
@@ -164,13 +264,26 @@ class MDSAlbum: MDSData {
         if !ignoreAssert { assert(MDSData.getAlbumId(songId) == id) }
         return songs[songId.1]
     }
-    // TODO: replace this with an iterator!!!!!
-    func getSongs() -> [MDSSong] {
-        return songs
+    class SongIterator: MDSSongIterator {
+        
+        private var songsList: [MDSSong]
+        private var songsIdx: Int
+        
+        init(songsList: [MDSSong], startIdx: Int = 0) {
+            self.songsIdx = startIdx
+            self.songsList = songsList
+        }
+        
+        func next() -> MDSSong? {
+            return (songsIdx < songsList.count) ? songsList[songsIdx++] : nil
+        }
+    }
+    func getSongs() -> SongIterator {
+        return SongIterator(songsList: songs)
     }
     
-    
     // Children Setters
+    // TODO
     
     
     // Get all albums under xml element of type "artist" as array of MDSAlbum objects
@@ -230,3 +343,19 @@ class MDSSong: MDSData {
         return result
     }
 }
+
+
+// ================= Iterators ==================
+
+protocol MDSSongIterator {
+    func next() -> MDSSong?
+}
+
+protocol MDSAlbumIterator {
+    func next() -> MDSAlbum?
+}
+
+protocol MDSArtistIterator {
+    func next() -> MDSArtist?
+}
+
