@@ -10,6 +10,8 @@ import Foundation
 
 //class MusicXML {
 
+    var musicRoot: MDSMusic? = nil
+
     /*class*/ let musicXmlFileName: String = "music.xml"
 
     /*class*/ func getMusicXMLPathURL() -> NSURL {
@@ -27,20 +29,31 @@ import Foundation
             
             assert(document.DTD != nil)
             
-            // Get first element of root element
-            var node: NSXMLNode? = document.rootElement()?.nextNode
-            
-            
-            var count: Int = 1
-            // Iterate over all nodes in document order
-            while node != nil {
-                if node!.kind == NSXMLNodeKind.NSXMLElementKind {
-                    println("Node \(count): \(node!.name) -> \(node!.objectValue)")
-                    count += 1
+            // Build music data structures from document
+            if var rootElement: NSXMLElement = document.rootElement() {
+                musicRoot = MDSMusic(musicElement: rootElement)
+                let iter: MDSIterator<MDSSong> = musicRoot!.getSongs()
+                var curAlbum: MDSSong? = iter.next()
+                while curAlbum != nil {
+                    println("Item: \(curAlbum!.title)")
+                    curAlbum = iter.next()
                 }
-                
-                node = node!.nextNode
+            } else {
+                Helper.printError("Failed to get root 'music' element from document")
             }
+
+            
+            
+            //            var count: Int = 1
+//            // Iterate over all nodes in document order
+//            while node != nil {
+//                if node!.kind == NSXMLNodeKind.NSXMLElementKind {
+//                    println("Node \(count): \(node!.name) -> \(node!.objectValue)")
+//                    count += 1
+//                }
+//                
+//                node = node!.nextNode
+//            }
             
         } else {
             Helper.printError("Failed to convert xml path to NSXMLDocument", error: error)

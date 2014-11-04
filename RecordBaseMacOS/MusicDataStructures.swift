@@ -31,7 +31,7 @@ func == (id1: MDSSongId, id2: MDSSongId) -> Bool {
 }
 
 
-// ================= Data ==================
+// ================= DATA ==================
 
 class MDSData: NSObject {
     
@@ -75,50 +75,26 @@ class MDSMusic: NSObject {
         return getAlbum(MDSData.getAlbumId(songId)).getSong(songId, ignoreAssert: true)
     }
     // -- Multiple
-    class ArtistIterator: MDSArtistIterator {
-        private var artistsIdx: Int
-        private var artistsList: [MDSArtist]
-        
-        init(artistsList: [MDSArtist], startIdx: Int = 0) {
-            self.artistsIdx = startIdx
-            self.artistsList = artistsList
-        }
-        
-        func next() -> MDSArtist? {
-            return (artistsIdx < artistsList.count) ? artistsList[artistsIdx] : nil
-        }
+    func getArtists() -> MDSIterator<MDSArtist> {
+        return MDSBaseIterator<MDSArtist>(list: artists)
     }
-    func getArtists() -> MDSArtistIterator {
-        return ArtistIterator(artistsList: artists)
-    }
-    class AlbumIterator: MDSAlbumIterator {
-        private var artistsIdx: Int
-        private var artistsList: [MDSArtist]
-        private var innerIterator: MDSAlbumIterator
-        
-        init(artistsList: [MDSArtist], startIdx: Int = 0) {
-            // TODO: replace this with having innerIterator be optional and checking accordingly
-            assert(startIdx < artistsList.count)
-            
-            self.artistsIdx = startIdx
-            self.artistsList = artistsList
-            self.innerIterator = self.artistsList[self.artistsIdx++].getAlbums()
-        }
-        
-        func next() -> MDSAlbum? {
-            var result: MDSAlbum? = innerIterator.next()
-            while result == nil {
-                
-                if artistsIdx >= artistsList.count {
-                    return nil
-                }
-                
-                innerIterator = artistsList[artistsIdx++].getAlbums()
-                result = innerIterator.next()
+    func getAlbums() -> MDSIterator<MDSAlbum> {
+        return MDSParentIterator<MDSArtist, MDSAlbum>(
+            list: artists,
+            getInnerIterator: {
+                (artist: MDSArtist) -> MDSIterator<MDSAlbum> in
+                return artist.getAlbums()
             }
-            
-            return result
-        }
+        )
+    }
+    func getSongs() -> MDSIterator<MDSSong> {
+        return MDSParentIterator<MDSArtist, MDSSong>(
+            list: artists,
+            getInnerIterator: {
+                (artist: MDSArtist) -> MDSIterator<MDSSong> in
+                return artist.getSongs()
+            }
+        )
     }
 }
 
@@ -159,53 +135,17 @@ class MDSArtist: MDSData {
         if !ignoreAssert { assert(MDSData.getArtistId(songId) == id) }
         return getAlbum(MDSData.getAlbumId(songId)).getSong(songId, ignoreAssert: true)
     }
-    class AlbumIterator: MDSAlbumIterator {
-        private var albumsIdx: Int
-        private var albumsList: [MDSAlbum]
-        
-        init(albumsList: [MDSAlbum], startIdx: Int = 0) {
-            self.albumsIdx = startIdx
-            self.albumsList = albumsList
-        }
-        
-        func next() -> MDSAlbum? {
-            return (albumsIdx < albumsList.count) ? albumsList[albumsIdx++] : nil
-        }
+    func getAlbums() -> MDSIterator<MDSAlbum> {
+        return MDSBaseIterator<MDSAlbum>(list: albums)
     }
-    func getAlbums() -> MDSAlbumIterator {
-        return AlbumIterator(albumsList: albums)
-    }
-    class SongIterator: MDSSongIterator {
-        private var albumsIdx: Int
-        private var albumsList: [MDSAlbum]
-        private var innerIterator: MDSSongIterator
-        
-        init(albumsList: [MDSAlbum], startIdx: Int = 0) {
-            // TODO: replace this with having innerIterator be optional and checking accordingly
-            assert(startIdx < albumsList.count)
-            
-            self.albumsIdx = startIdx
-            self.albumsList = albumsList
-            self.innerIterator = self.albumsList[self.albumsIdx++].getSongs()
-        }
-        
-        func next() -> MDSSong? {
-            var result: MDSSong? = innerIterator.next()
-            while result == nil {
-                
-                if albumsIdx >= albumsList.count {
-                    return nil
-                }
-                
-                innerIterator = albumsList[albumsIdx++].getSongs()
-                result = innerIterator.next()
+    func getSongs() -> MDSIterator<MDSSong> {
+        return MDSParentIterator<MDSAlbum, MDSSong>(
+            list: albums,
+            getInnerIterator: {
+                (album: MDSAlbum) -> MDSIterator<MDSSong> in
+                return album.getSongs()
             }
-            
-            return result
-        }
-    }
-    func getSongs() -> MDSSongIterator {
-        return SongIterator(albumsList: albums)
+        )
     }
     
     
@@ -264,22 +204,8 @@ class MDSAlbum: MDSData {
         if !ignoreAssert { assert(MDSData.getAlbumId(songId) == id) }
         return songs[songId.1]
     }
-    class SongIterator: MDSSongIterator {
-        
-        private var songsList: [MDSSong]
-        private var songsIdx: Int
-        
-        init(songsList: [MDSSong], startIdx: Int = 0) {
-            self.songsIdx = startIdx
-            self.songsList = songsList
-        }
-        
-        func next() -> MDSSong? {
-            return (songsIdx < songsList.count) ? songsList[songsIdx++] : nil
-        }
-    }
-    func getSongs() -> SongIterator {
-        return SongIterator(songsList: songs)
+    func getSongs() -> MDSIterator<MDSSong> {
+        return MDSBaseIterator<MDSSong>(list: songs)
     }
     
     // Children Setters
@@ -345,17 +271,58 @@ class MDSSong: MDSData {
 }
 
 
-// ================= Iterators ==================
+// ================= ITERATORS ==================
 
-protocol MDSSongIterator {
-    func next() -> MDSSong?
+// Should really be a protocol but swift is stupid and doesn't have generics for protocols
+// (and I don't feel like using an associated type, not trying to cast the result of next() every 2 seconds)
+class MDSIterator<T>: NSObject {
+    func next() -> T? {
+        return nil
+    }
 }
 
-protocol MDSAlbumIterator {
-    func next() -> MDSAlbum?
+class MDSBaseIterator<T>: MDSIterator<T> {
+    private var idx: Int
+    private var list: [T]
+    
+    init(list: [T], startIdx: Int = 0) {
+        assert(startIdx < list.count)
+        
+        self.idx = startIdx
+        self.list = list
+    }
+    
+    override func next() -> T? {
+        return (idx < list.count) ? list[idx++] : nil
+    }
 }
 
-protocol MDSArtistIterator {
-    func next() -> MDSArtist?
+class MDSParentIterator<P, T>: MDSIterator<T> {
+    private var idx: Int
+    private var list: [P]
+    private var getInnerIterator: (P) -> MDSIterator<T>
+    private var innerIterator: MDSIterator<T>
+    
+    init(list: [P], getInnerIterator: (P) -> MDSIterator<T>, startIdx: Int = 0) {
+        assert(startIdx < list.count)
+        
+        self.idx = startIdx
+        self.list = list
+        self.getInnerIterator = getInnerIterator
+        self.innerIterator = self.getInnerIterator(self.list[self.idx++])
+    }
+    
+    override func next() -> T? {
+        var result: T? = innerIterator.next()
+        while result == nil {
+            if idx >= list.count {
+                return nil
+            }
+            
+            innerIterator = getInnerIterator(list[idx++])
+            result = innerIterator.next()
+        }
+        
+        return result
+    }
 }
-

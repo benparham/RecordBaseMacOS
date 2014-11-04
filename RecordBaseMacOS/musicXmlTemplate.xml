@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE music [
+
+<!ELEMENT music (artist+)>
+<!ELEMENT artist (name,album+)>
+<!ELEMENT album (title,year?,song+)>
+<!ELEMENT song (title)>
+<!ELEMENT year (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+]>
+
+<music>
+    <artist>
+        <name>Artist Name 1</name>
+        <album>
+            <title>Album Title 1</title>
+            <year>1991</year>
+            <song>
+                <title>Song Title 1</title>
+            </song>
+        </album>
+    </artist>
+    <artist>
+        <name>Artist Name 2</name>
+        <album>
+            <title>Album Title 2</title>
+            <year>1992</year>
+            <song>
+                <title>Song Title 2</title>
+            </song>
+            <song>
+                <title>Song Title 2-2</title>
+            </song>
+        </album>
+    </artist>
+    <artist>
+        <name>Artist Name 3</name>
+        <album>
+            <title>Album Title 3</title>
+            <year>1993</year>
+            <song>
+                <title>Song Title 3</title>
+            </song>
+        </album>
+    </artist>
+    <artist>
+        <name>Artist Name 4</name>
+        <album>
+            <title>Album Title 4</title>
+            <year>1994</year>
+            <song>
+                <title>Song Title 4</title>
+            </song>
+        </album>
+    </artist>
+    <artist>
+        <name>Artist Name 5</name>
+        <album>
+            <title>Album Title 5</title>
+            <year>1995</year>
+            <song>
+                <title>Song Title 5</title>
+            </song>
+        </album>
+    </artist>
+</music>

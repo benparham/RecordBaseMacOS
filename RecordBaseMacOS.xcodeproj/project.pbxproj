@@ -22,6 +22,7 @@
 		80CB677F1A00CAE80088FB81 /* PreferenceOtherViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 80CB677D1A00CAE80088FB81 /* PreferenceOtherViewController.xib */; };
 		80CB67821A00FA450088FB81 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB67811A00FA450088FB81 /* Constants.swift */; };
 		80CB67841A01008C0088FB81 /* defaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80CB67831A01008C0088FB81 /* defaultPrefs.plist */; };
+		80E2894C1A08EDD700F8DD79 /* musicXmlTemplate.xml in Resources */ = {isa = PBXBuildFile; fileRef = 80E2894B1A08EDD700F8DD79 /* musicXmlTemplate.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		80CB677D1A00CAE80088FB81 /* PreferenceOtherViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceOtherViewController.xib; sourceTree = "<group>"; };
 		80CB67811A00FA450088FB81 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		80CB67831A01008C0088FB81 /* defaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = defaultPrefs.plist; sourceTree = "<group>"; };
+		80E2894B1A08EDD700F8DD79 /* musicXmlTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = musicXmlTemplate.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			children = (
 				80BCA01B19FEB1820076EA65 /* Info.plist */,
 				80CB67831A01008C0088FB81 /* defaultPrefs.plist */,
+				80E2894B1A08EDD700F8DD79 /* musicXmlTemplate.xml */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				80CB677B1A00CAA30088FB81 /* PreferenceGeneralViewController.xib in Resources */,
+				80E2894C1A08EDD700F8DD79 /* musicXmlTemplate.xml in Resources */,
 				80BCA02119FEB1820076EA65 /* Images.xcassets in Resources */,
 				80CB677F1A00CAE80088FB81 /* PreferenceOtherViewController.xib in Resources */,
 				80CB67841A01008C0088FB81 /* defaultPrefs.plist in Resources */,
