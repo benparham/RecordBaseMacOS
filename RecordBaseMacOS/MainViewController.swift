@@ -19,6 +19,8 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     @IBOutlet
     var selectTableView: NSTableView?
     
+    // Contains all music data once initialized
+    var musicRoot: MDSMusic?
     
     // ====================== Controller =====================
     
@@ -28,7 +30,8 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         filterTableId = filterTableView?.identifier
         selectTableId = selectTableView?.identifier
         
-        fetchMusicDataFromXML()
+        musicRoot = fetchMusicDataFromXML()
+        assert(musicRoot != nil)
     }
     
     
@@ -36,18 +39,32 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     // ====================== Delegate/DataSource =====================
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return (tableView.identifier == "filterTable"
-            ? numberOfRowsInFilterTableView()
-            : numberOfRowsInSelectTableView())
+        switch tableView.identifier {
+            case filterTableId!:
+                return numberOfRowsInFilterTableView()
+            case selectTableId!:
+                return numberOfRowsInSelectTableView()
+            default:
+                Helper.printError("Delegate received request from unknown tableView")
+        }
+        
+        return 0
     }
     
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
         
         assert(tableColumn != nil)
         
-        return (tableView.identifier == "filterTable"
-            ? filterTableView(tableView, viewForTableColumn: tableColumn!, row: row)
-            : selectTableView(tableView, viewForTableColumn: tableColumn!, row: row))
+        switch tableView.identifier {
+        case filterTableId!:
+            return filterTableView(tableView, viewForTableColumn: tableColumn!, row: row)
+        case selectTableId!:
+            return selectTableView(tableView, viewForTableColumn: tableColumn!, row: row)
+        default:
+            Helper.printError("Delegate received request from unknown tableView")
+        }
+        
+        return nil
     }
     
     
@@ -74,7 +91,7 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     // ====================== Select Table =====================
     
     func numberOfRowsInSelectTableView() -> Int {
-        return 5
+        return musicRoot!.getNumSongs()
     }
     
     func selectTableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn, row: Int) -> NSView? {
@@ -83,7 +100,28 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         
         assert(result != nil)
         
-        result!.textField?.stringValue = "select table item"
+        var song = musicRoot!.getSong(idx: row)
+        var text: String?
+        switch tableColumn.identifier {
+            case "columnTitle":
+                text = song.title
+            case "columnArtist":
+                text = musicRoot!.getArtist(artistId: song.getArtistId()).name
+            case "columnAlbum":
+                text = musicRoot!.getAlbum(albumId: song.getAlbumId()).title
+            case "columnYear":
+//                text = musicRoot!.getAlbum(albumId: song.getAlbumId()).year
+                text = "Not yet implemented"
+            default:
+                Helper.printError("Received request from unknown column")
+                text = nil
+        }
+        
+        if (text != nil) {
+            result!.textField?.stringValue = text!
+        } else {
+            result = nil
+        }
         
         return result
     }
