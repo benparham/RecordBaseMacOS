@@ -10,28 +10,32 @@ import Cocoa
 
 class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     
-    var filterTableId: String?
-    var selectTableId: String?
-    
+    // ====================== View Outlets =====================
     @IBOutlet
     var filterTableView: NSTableView?
     
     @IBOutlet
     var selectTableView: NSTableView?
     
+    
+    
+    // ====================== Globals =====================
     // Contains all music data once initialized
-    var musicRoot: MDSMusic?
+    var musicRoot: MDSMusic!
+    
+    var selectTable: SelectTable!
+    var filterTable: FilterTable!
     
     // ====================== Controller =====================
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        filterTableId = filterTableView?.identifier
-        selectTableId = selectTableView?.identifier
-        
         musicRoot = fetchMusicDataFromXML()
         assert(musicRoot != nil)
+        
+        selectTable = SelectTable(tableView: selectTableView!, musicRoot: musicRoot)
+        filterTable = FilterTable(tableView: filterTableView!, musicRoot: musicRoot)
     }
     
     
@@ -40,10 +44,10 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
         switch tableView.identifier {
-            case filterTableId!:
-                return numberOfRowsInFilterTableView()
-            case selectTableId!:
-                return numberOfRowsInSelectTableView()
+            case filterTable.tableId:
+                return filterTable.numberOfRowsInTableView()
+            case selectTable.tableId:
+                return selectTable.numberOfRowsInTableView()
             default:
                 Helper.printError("Delegate received request from unknown tableView")
         }
@@ -51,15 +55,29 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         return 0
     }
     
+    func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        
+        switch tableView.identifier {
+        case filterTable.tableId:
+            return filterTable.tableView(rowViewForRow: row)
+        case selectTable.tableId:
+            return selectTable.tableView(rowViewForRow: row)
+        default:
+            Helper.printError("Recieved message from unknwon tableView")
+        }
+        
+        return nil
+    }
+    
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
         
         assert(tableColumn != nil)
         
         switch tableView.identifier {
-        case filterTableId!:
-            return filterTableView(tableView, viewForTableColumn: tableColumn!, row: row)
-        case selectTableId!:
-            return selectTableView(tableView, viewForTableColumn: tableColumn!, row: row)
+        case filterTable.tableId:
+            return filterTable.tableView(viewForTableColumn: tableColumn!, row: row)
+        case selectTable.tableId:
+            return selectTable.tableView(viewForTableColumn: tableColumn!, row: row)
         default:
             Helper.printError("Delegate received request from unknown tableView")
         }
@@ -67,63 +85,26 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         return nil
     }
     
+    // ====================== Segmented Control =====================
     
-    
-    // ====================== Filter Table =====================
-    
-    func numberOfRowsInFilterTableView() -> Int {
-        return 5
-    }
-    
-    func filterTableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn, row: Int) -> NSView? {
-        
-        var result = tableView.makeViewWithIdentifier(tableColumn.identifier, owner: self) as? NSTableCellView
-        
-        assert(result != nil)
-        
-        result!.textField?.stringValue = "filter table item"
-        
-        return result
+    @IBAction
+    func segmentedControlClicked(sender: AnyObject) {
+        filterTable.updateFilterOption(sender as NSSegmentedControl)
     }
     
     
-    
-    // ====================== Select Table =====================
-    
-    func numberOfRowsInSelectTableView() -> Int {
-        return musicRoot!.getNumSongs()
-    }
-    
-    func selectTableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn, row: Int) -> NSView? {
+    // ====================== Row Selection =====================
+    @IBAction
+    func rowSelected(sender: AnyObject) {
+        let tableView = sender as NSTableView
         
-        var result = tableView.makeViewWithIdentifier(tableColumn.identifier, owner: self) as? NSTableCellView
-        
-        assert(result != nil)
-        
-        var song = musicRoot!.getSong(idx: row)
-        var text: String?
-        switch tableColumn.identifier {
-            case "columnTitle":
-                text = song.title
-            case "columnArtist":
-                text = musicRoot!.getArtist(artistId: song.getArtistId()).name
-            case "columnAlbum":
-                text = musicRoot!.getAlbum(albumId: song.getAlbumId()).title
-            case "columnYear":
-//                text = musicRoot!.getAlbum(albumId: song.getAlbumId()).year
-                text = "Not yet implemented"
-            default:
-                Helper.printError("Received request from unknown column")
-                text = nil
+        switch tableView.identifier {
+        case filterTable.tableId:
+            filterTable.rowSelected()
+        case selectTable.tableId:
+            selectTable.rowSelected()
+        default:
+            Helper.printError("Recieved message from unknown table view")
         }
-        
-        if (text != nil) {
-            result!.textField?.stringValue = text!
-        } else {
-            result = nil
-        }
-        
-        return result
     }
-    
 }
