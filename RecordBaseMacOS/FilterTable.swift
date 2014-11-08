@@ -123,17 +123,39 @@ class FilterTable: NSObject {
     
     // ====================== User Action Response =====================
     
-    func rowSelected() {
-        println("Filter table view selected, row: \(tableView.selectedRow)")
+    func getSelectedSongContainer() -> MDSSongContainer? {
+        var selectedRow = tableView.rowViewAtRow(tableView.selectedRow, makeIfNecessary: false) as MusicTableRowView
+        
+        var container: MDSSongContainer!
+        switch curFilterOption {
+        case .Artist:
+            assert(selectedRow.type == .MDSArtistType)
+            container = musicRoot.getArtist(artistId: selectedRow.dataId as MDSArtistId)
+        case .Album:
+            assert(selectedRow.type == .MDSAlbumType)
+            container = musicRoot.getAlbum(albumId: selectedRow.dataId as MDSAlbumId)
+        case .None:
+            Helper.printError("Request for selected filter row when filter option is None")
+            return nil
+        default:
+            Helper.printError("Unknown filter option")
+            return nil
+        }
+        
+        return container
     }
     
-    func updateFilterOption(control: NSSegmentedControl) {
+    // Returns true if none was selected, false otherwise
+    func updateFilterOption(control: NSSegmentedControl) -> Bool {
+        var noneSelected = false
+        
         let oldOption = curFilterOption
         
         switch control.selectedSegment {
             case FilterOption.None.rawValue:
                 println("None selected")
                 curFilterOption = .None
+                noneSelected = true
             case FilterOption.Artist.rawValue:
                 println("Artist selected")
                 curFilterOption = .Artist
@@ -146,6 +168,11 @@ class FilterTable: NSObject {
         
         if curFilterOption != oldOption {
             tableView.reloadData()
+            if noneSelected {
+                return true
+            }
         }
+        
+        return false
     }
 }

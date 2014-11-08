@@ -7,6 +7,9 @@
 //
 
 
+// TODO: MDSSong should contain parent: MDSAlbum. MDSAlbum has parent: MDSArtist. This way can go directly from child to parent without searching via id
+
+
 // TODO: Should probably make array of albums and array of songs actually hold options. Then, after deleting a song or album, can set that space in the array to nil. Getters an still return non-options, just have an assert to check for nil and then return <whatever>!. No one should be trying to access an id that was deleted anyway
 
 import Foundation
@@ -85,6 +88,8 @@ protocol MDSData {
     var id: IdType { get }
     
     class func dataFromParentElement(#parentId: ParentIdType?, parentElement: NSXMLElement) -> [SelfType]
+    
+    func asString() -> String
 }
 
 protocol MDSSongContainer {
@@ -237,6 +242,11 @@ class MDSArtist: MDSData, MDSSongContainer, MDSAlbumContainer {
         return result
     }
     
+    func asString() -> String {
+        return "Artist: " + name
+    }
+    
+    
     // ----- Conform to album container protocol
     var numAlbums: Int = 0
     
@@ -340,6 +350,10 @@ class MDSAlbum: MDSData, MDSSongContainer {
         return result
     }
     
+    func asString() -> String {
+        return "Album: " + title
+    }
+    
     
     // ----- Conform to song container protocol
     var numSongs: Int = 0
@@ -405,6 +419,10 @@ class MDSSong: MDSData {
         }
         
         return result
+    }
+    
+    func asString() -> String {
+        return "Song: " + title
     }
     
     // ----- Initializers

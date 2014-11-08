@@ -30,12 +30,17 @@ class SelectTable: NSObject {
     // ====================== Globals =====================
     let tableView: NSTableView
     let musicRoot: MDSMusic
-    
+    var songRoot: MDSSongContainer
     
     // ====================== Initializer =====================
-    init(tableView: NSTableView, musicRoot: MDSMusic) {
+    init(tableView: NSTableView, musicRoot: MDSMusic, songRoot: MDSSongContainer? = nil) {
         self.tableView = tableView
         self.musicRoot = musicRoot
+        if songRoot != nil {
+            self.songRoot = songRoot!
+        } else {
+            self.songRoot = self.musicRoot
+        }
     }
     
     
@@ -43,14 +48,14 @@ class SelectTable: NSObject {
     
     // Get number of rows in table
     func numberOfRowsInTableView() -> Int {
-        return musicRoot.numSongs
+        return songRoot.numSongs
     }
     
     // Get view for a row
     func tableView(rowViewForRow row: Int) -> NSTableRowView? {
         
         var type: MDSDataType = .MDSSongType
-        var dataId: MDSDataId = musicRoot.getSong(idx: row).id
+        var dataId: MDSDataId = songRoot.getSong(idx: row).id
         
         var result = tableView.makeViewWithIdentifier(rowId, owner: self) as? MusicTableRowView
         
@@ -69,7 +74,7 @@ class SelectTable: NSObject {
         var rowView = tableView.rowViewAtRow(row, makeIfNecessary: false) as MusicTableRowView
         assert(rowView.type == MDSDataType.MDSSongType)
         
-        var song: MDSSong = musicRoot.getSong(songId: rowView.dataId as MDSSongId)
+        var song: MDSSong = songRoot.getSong(songId: rowView.dataId as MDSSongId, ignoreAssert: false)
         
         var result = tableView.makeViewWithIdentifier(cellId, owner: self) as? NSTableCellView
         
@@ -101,5 +106,10 @@ class SelectTable: NSObject {
     // Respond to row selection
     func rowSelected() {
         println("Select table view selected, row: \(tableView.selectedRow)")
+    }
+    
+    func updateSongRoot(newSongRoot: MDSSongContainer) {
+        songRoot = newSongRoot
+        tableView.reloadData()
     }
 }

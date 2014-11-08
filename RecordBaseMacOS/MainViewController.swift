@@ -8,6 +8,8 @@
 
 import Cocoa
 
+// TODO: make a separate filter row view that can only contain a songcontainer. Will make everything much easier. Cause fuck casting right?
+
 class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     
     // ====================== View Outlets =====================
@@ -89,7 +91,9 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     
     @IBAction
     func segmentedControlClicked(sender: AnyObject) {
-        filterTable.updateFilterOption(sender as NSSegmentedControl)
+        if filterTable.updateFilterOption(sender as NSSegmentedControl) {
+            selectTable.updateSongRoot(musicRoot)
+        }
     }
     
     
@@ -100,7 +104,8 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         
         switch tableView.identifier {
         case filterTable.tableId:
-            filterTable.rowSelected()
+            var container: MDSSongContainer = filterTable.getSelectedSongContainer()!
+            selectTable.updateSongRoot(container)
         case selectTable.tableId:
             selectTable.rowSelected()
         default:
