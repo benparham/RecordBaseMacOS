@@ -29,18 +29,12 @@ class SelectTable: NSObject {
     
     // ====================== Globals =====================
     let tableView: NSTableView
-    let musicRoot: MDSMusic
-    var songRoot: MDSSongContainer
+    var musicRoot: MDSSongContainer
     
     // ====================== Initializer =====================
-    init(tableView: NSTableView, musicRoot: MDSMusic, songRoot: MDSSongContainer? = nil) {
+    init(tableView: NSTableView, musicRoot: MDSSongContainer) {
         self.tableView = tableView
         self.musicRoot = musicRoot
-        if songRoot != nil {
-            self.songRoot = songRoot!
-        } else {
-            self.songRoot = self.musicRoot
-        }
     }
     
     
@@ -48,21 +42,28 @@ class SelectTable: NSObject {
     
     // Get number of rows in table
     func numberOfRowsInTableView() -> Int {
-        return songRoot.numSongs
+        return musicRoot.numSongs
     }
     
     // Get view for a row
     func tableView(rowViewForRow row: Int) -> NSTableRowView? {
         
-        var type: MDSDataType = .MDSSongType
-        var dataId: MDSDataId = songRoot.getSong(idx: row).id
+//        var type: MDSDataType = .MDSSongType
+//        var dataId: MDSDataId = songRoot.getSong(idx: row).id
         
-        var result = tableView.makeViewWithIdentifier(rowId, owner: self) as? MusicTableRowView
+        var song: MDSSong = musicRoot.getSong(idx: row)
         
+        var result = tableView.makeViewWithIdentifier(rowId, owner: self) as? SelectTableRowView
+        
+//        if result == nil {
+//            result = MusicTableRowView(type: type, dataId: dataId)
+//        } else {
+//            result!.setId(type, dataId: dataId)
+//        }
         if result == nil {
-            result = MusicTableRowView(type: type, dataId: dataId)
+            result = SelectTableRowView(data: song)
         } else {
-            result!.setId(type, dataId: dataId)
+            result!.data = song
         }
         
         return result
@@ -71,28 +72,29 @@ class SelectTable: NSObject {
     // Get view for a cell
     func tableView(viewForTableColumn tableColumn: NSTableColumn, row: Int) -> NSView? {
         
-        var rowView = tableView.rowViewAtRow(row, makeIfNecessary: false) as MusicTableRowView
-        assert(rowView.type == MDSDataType.MDSSongType)
+        var rowView = tableView.rowViewAtRow(row, makeIfNecessary: false) as SelectTableRowView
         
-        var song: MDSSong = songRoot.getSong(songId: rowView.dataId as MDSSongId, ignoreAssert: false)
+        assert(rowView.data.type == MDSDataType.MDSSongType)
+        var song: MDSSong = rowView.data as MDSSong
         
         var result = tableView.makeViewWithIdentifier(cellId, owner: self) as? NSTableCellView
-        
         assert(result != nil)
         
         var text: String!
         switch tableColumn.identifier {
-        case titleColumnId:
-            text = song.title
-        case artistColumnId:
-            text = musicRoot.getArtist(artistId: song.artistId).name
-        case albumColumnId:
-            text = musicRoot.getAlbum(albumId: song.albumId).title
-        case yearColumnId:
-            text = "Not yet implemented"
-        default:
-            Helper.printError("Received request from unknown column")
-            return nil
+            case titleColumnId:
+                text = song.title
+            case artistColumnId:
+//                text = musicRoot.getArtist(artistId: song.artistId).name
+                text = song.artist.name
+            case albumColumnId:
+//                text = musicRoot.getAlbum(albumId: song.albumId).title
+                text = song.album.title
+            case yearColumnId:
+                text = "Not yet implemented"
+            default:
+                Helper.printError("Received request from unknown column")
+                return nil
         }
         
         result!.textField?.stringValue = text
@@ -108,8 +110,8 @@ class SelectTable: NSObject {
         println("Select table view selected, row: \(tableView.selectedRow)")
     }
     
-    func updateSongRoot(newSongRoot: MDSSongContainer) {
-        songRoot = newSongRoot
+    func updateMusicRoot(newRoot: MDSSongContainer) {
+        musicRoot = newRoot
         tableView.reloadData()
     }
 }

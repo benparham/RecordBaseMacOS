@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		800C4DE91A0D68B000B3AB47 /* FilterTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800C4DE81A0D68B000B3AB47 /* FilterTable.swift */; };
 		800C4DEB1A0D68C600B3AB47 /* SelectTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800C4DEA1A0D68C600B3AB47 /* SelectTable.swift */; };
+		803FA0561A10004D0068D05F /* SelectTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803FA0551A10004D0068D05F /* SelectTableRowView.swift */; };
 		80BCA01D19FEB1820076EA65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BCA01C19FEB1820076EA65 /* AppDelegate.swift */; };
 		80BCA02119FEB1820076EA65 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80BCA02019FEB1820076EA65 /* Images.xcassets */; };
 		80BCA02419FEB1820076EA65 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80BCA02219FEB1820076EA65 /* Main.storyboard */; };
@@ -25,7 +26,7 @@
 		80CB67821A00FA450088FB81 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB67811A00FA450088FB81 /* Constants.swift */; };
 		80CB67841A01008C0088FB81 /* defaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80CB67831A01008C0088FB81 /* defaultPrefs.plist */; };
 		80E2894C1A08EDD700F8DD79 /* musicXmlTemplate.xml in Resources */ = {isa = PBXBuildFile; fileRef = 80E2894B1A08EDD700F8DD79 /* musicXmlTemplate.xml */; };
-		80F57F281A0C9E550010AFDD /* MusicTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F57F271A0C9E550010AFDD /* MusicTableRowView.swift */; };
+		80FF99791A0DF62E0015775D /* FilterTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FF99781A0DF62E0015775D /* FilterTableRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 /* Begin PBXFileReference section */
 		800C4DE81A0D68B000B3AB47 /* FilterTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterTable.swift; sourceTree = "<group>"; };
 		800C4DEA1A0D68C600B3AB47 /* SelectTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTable.swift; sourceTree = "<group>"; };
+		803FA0551A10004D0068D05F /* SelectTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTableRowView.swift; sourceTree = "<group>"; };
 		80BCA01719FEB1820076EA65 /* RecordBaseMacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordBaseMacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80BCA01B19FEB1820076EA65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80BCA01C19FEB1820076EA65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -61,7 +63,7 @@
 		80CB67811A00FA450088FB81 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		80CB67831A01008C0088FB81 /* defaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = defaultPrefs.plist; sourceTree = "<group>"; };
 		80E2894B1A08EDD700F8DD79 /* musicXmlTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = musicXmlTemplate.xml; sourceTree = "<group>"; };
-		80F57F271A0C9E550010AFDD /* MusicTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableRowView.swift; sourceTree = "<group>"; };
+		80FF99781A0DF62E0015775D /* FilterTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterTableRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,7 +204,8 @@
 		80EC94AF1A0BBAA500D13384 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				80F57F271A0C9E550010AFDD /* MusicTableRowView.swift */,
+				80FF99781A0DF62E0015775D /* FilterTableRowView.swift */,
+				803FA0551A10004D0068D05F /* SelectTableRowView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -311,16 +314,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				80CB677E1A00CAE80088FB81 /* PreferenceOtherViewController.swift in Sources */,
+				80FF99791A0DF62E0015775D /* FilterTableRowView.swift in Sources */,
 				80CB676F1A0084180088FB81 /* PreferenceWindowController.swift in Sources */,
 				80C30A251A035080004CFE6C /* MusicDataStructures.swift in Sources */,
 				80CB67821A00FA450088FB81 /* Constants.swift in Sources */,
 				800C4DEB1A0D68C600B3AB47 /* SelectTable.swift in Sources */,
 				80BCA01D19FEB1820076EA65 /* AppDelegate.swift in Sources */,
 				80C30A2B1A03658E004CFE6C /* Helper.swift in Sources */,
+				803FA0561A10004D0068D05F /* SelectTableRowView.swift in Sources */,
 				80C30A271A035255004CFE6C /* MusicXML.swift in Sources */,
 				80CB677A1A00CAA30088FB81 /* PreferenceGeneralViewController.swift in Sources */,
 				800C4DE91A0D68B000B3AB47 /* FilterTable.swift in Sources */,
-				80F57F281A0C9E550010AFDD /* MusicTableRowView.swift in Sources */,
 				80C30A231A02FD30004CFE6C /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

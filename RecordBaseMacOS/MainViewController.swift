@@ -92,7 +92,7 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     @IBAction
     func segmentedControlClicked(sender: AnyObject) {
         if filterTable.updateFilterOption(sender as NSSegmentedControl) {
-            selectTable.updateSongRoot(musicRoot)
+            selectTable.updateMusicRoot(musicRoot)
         }
     }
     
@@ -105,7 +105,7 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         switch tableView.identifier {
         case filterTable.tableId:
             var container: MDSSongContainer = filterTable.getSelectedSongContainer()!
-            selectTable.updateSongRoot(container)
+            selectTable.updateMusicRoot(container)
         case selectTable.tableId:
             selectTable.rowSelected()
         default:

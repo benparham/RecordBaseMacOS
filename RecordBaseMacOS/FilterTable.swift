@@ -60,18 +60,22 @@ class FilterTable: NSObject {
         return 0
     }
     
-    func tableView(rowViewForRow row: Int) -> NSTableRowView? {
+    func tableView(rowViewForRow row: Int) -> FilterTableRowView? {
         
-        var type: MDSDataType!
-        var dataId: MDSDataId!
+//        var type: MDSDataType!
+//        var dataId: MDSDataId!
+        
+        var container: MDSSongContainer!
         
         switch curFilterOption {
             case .Artist:
-                type = .MDSArtistType
-                dataId = musicRoot.getArtist(idx: row).id
+//                type = .MDSArtistType
+//                dataId = musicRoot.getArtist(idx: row).id
+                container = musicRoot.getArtist(idx: row)
             case .Album:
-                type = .MDSAlbumType
-                dataId = musicRoot.getAlbum(idx: row).id
+//                type = .MDSAlbumType
+//                dataId = musicRoot.getAlbum(idx: row).id
+                container = musicRoot.getAlbum(idx: row)
             case .None:
                 Helper.printError("Request for filter table row when filter option is None")
                 return nil
@@ -80,12 +84,12 @@ class FilterTable: NSObject {
                 return nil
         }
         
-        var result = tableView.makeViewWithIdentifier(rowId, owner: self) as? MusicTableRowView
+        var result = tableView.makeViewWithIdentifier(rowId, owner: self) as? FilterTableRowView
         
         if result == nil {
-            result = MusicTableRowView(type: type, dataId: dataId)
+            result = FilterTableRowView(data: container)
         } else {
-            result!.setId(type, dataId: dataId)
+            result!.data = container
         }
         
         return result
@@ -94,55 +98,74 @@ class FilterTable: NSObject {
     
     func tableView(viewForTableColumn tableColumn: NSTableColumn, row: Int) -> NSView? {
         
-        var rowView = tableView.rowViewAtRow(row, makeIfNecessary: false) as MusicTableRowView
+        var rowView = tableView.rowViewAtRow(row, makeIfNecessary: false) as FilterTableRowView
         
         var text: String!
-        switch curFilterOption {
-        case .Artist:
-            assert(rowView.type == MDSDataType.MDSArtistType)
-            text = musicRoot.getArtist(artistId: rowView.dataId as MDSArtistId).name
-        case .Album:
-            assert(rowView.type == MDSDataType.MDSAlbumType)
-            text = musicRoot.getAlbum(albumId: rowView.dataId as MDSAlbumId).title
-        case .None:
-            Helper.printError("Recieved request for a filter table cell view while filter option is none")
-            return nil
-        default:
-            Helper.printError("Unknown enum value")
-            return nil
+        switch rowView.data.type {
+            case MDSDataType.MDSArtistType:
+                text = (rowView.data as MDSArtist).name
+            case MDSDataType.MDSAlbumType:
+                text = (rowView.data as MDSAlbum).title
+            default:
+                Helper.printError("Filter table has row view with unsupported MDSDataType")
+                return nil
         }
         
         var result = tableView.makeViewWithIdentifier(cellId, owner: self) as? NSTableCellView
-        
         assert(result != nil)
         
         result!.textField?.stringValue = text
         
         return result
+        
+//        var text: String!
+//        switch curFilterOption {
+//        case .Artist:
+//            text = rowView.data.
+//        case .Album:
+//            assert(rowView.type == MDSDataType.MDSAlbumType)
+//            text = musicRoot.getAlbum(albumId: rowView.dataId as MDSAlbumId).title
+//        case .None:
+//            Helper.printError("Recieved request for a filter table cell view while filter option is none")
+//            return nil
+//        default:
+//            Helper.printError("Unknown enum value")
+//            return nil
+//        }
+//        
+//        var result = tableView.makeViewWithIdentifier(cellId, owner: self) as? NSTableCellView
+//        
+//        assert(result != nil)
+//        
+//        result!.textField?.stringValue = text
+//        
+//        return result
     }
     
     // ====================== User Action Response =====================
     
     func getSelectedSongContainer() -> MDSSongContainer? {
-        var selectedRow = tableView.rowViewAtRow(tableView.selectedRow, makeIfNecessary: false) as MusicTableRowView
+        var selectedRow = tableView.rowViewAtRow(tableView.selectedRow, makeIfNecessary: false) as FilterTableRowView
         
-        var container: MDSSongContainer!
-        switch curFilterOption {
-        case .Artist:
-            assert(selectedRow.type == .MDSArtistType)
-            container = musicRoot.getArtist(artistId: selectedRow.dataId as MDSArtistId)
-        case .Album:
-            assert(selectedRow.type == .MDSAlbumType)
-            container = musicRoot.getAlbum(albumId: selectedRow.dataId as MDSAlbumId)
-        case .None:
-            Helper.printError("Request for selected filter row when filter option is None")
-            return nil
-        default:
-            Helper.printError("Unknown filter option")
-            return nil
-        }
+        return selectedRow.data
         
-        return container
+//        var container: MDSSongContainer!
+//        switch curFilterOption {
+//        case .Artist:
+//            assert(selectedRow.type == .MDSArtistType)
+//            container = musicRoot.getArtist(artistId: selectedRow.dataId as MDSArtistId)
+//        case .Album:
+//            assert(selectedRow.type == .MDSAlbumType)
+//            container = musicRoot.getAlbum(albumId: selectedRow.dataId as MDSAlbumId)
+//        case .None:
+//            Helper.printError("Request for selected filter row when filter option is None")
+//            return nil
+//        default:
+//            Helper.printError("Unknown filter option")
+//            return nil
+//        }
+//        
+//        return container
     }
     
     // Returns true if none was selected, false otherwise
