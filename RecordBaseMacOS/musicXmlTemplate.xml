@@ -5,10 +5,11 @@
 <!ELEMENT music (artist+)>
 <!ELEMENT artist (name,album+)>
 <!ELEMENT album (title,year?,song+)>
-<!ELEMENT song (title)>
+<!ELEMENT song (title,fileName)>
 <!ELEMENT year (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT title (#PCDATA)>
+<!ELEMENT fileName (#PCDATA)>
 ]>
 
 <music>
@@ -19,6 +20,7 @@
             <year>1991</year>
             <song>
                 <title>Song Title 1</title>
+                <fileName>File 1</fileName>
             </song>
         </album>
     </artist>
@@ -29,9 +31,11 @@
             <year>1992</year>
             <song>
                 <title>Song Title 2</title>
+                <fileName>File 2</fileName>
             </song>
             <song>
                 <title>Song Title 2-2</title>
+                <fileName>File 2-2</fileName>
             </song>
         </album>
     </artist>
@@ -42,6 +46,7 @@
             <year>1993</year>
             <song>
                 <title>Song Title 3</title>
+                <fileName>File 3</fileName>
             </song>
         </album>
     </artist>
@@ -52,6 +57,7 @@
             <year>1994</year>
             <song>
                 <title>Song Title 4</title>
+                <fileName>File 4</fileName>
             </song>
         </album>
     </artist>
@@ -62,6 +68,7 @@
             <year>1995</year>
             <song>
                 <title>Song Title 5</title>
+                <fileName>File 5</fileName>
             </song>
         </album>
     </artist>

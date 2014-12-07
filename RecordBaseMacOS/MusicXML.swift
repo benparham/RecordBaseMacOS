@@ -15,7 +15,7 @@ import Foundation
     /*class*/ let musicXmlFileName: String = "music.xml"
 
     /*class*/ func getMusicXMLPathURL() -> NSURL {
-        return NSUserDefaults.standardUserDefaults().URLForKey(prefsKeyStorageUrl)!.URLByAppendingPathComponent(musicXmlFileName)
+        return NSUserDefaults.standardUserDefaults().URLForKey(prefsKeyStorageUrl)!.URLByAppendingPathComponent(musicDirectory + "/" + musicXmlFileName)
     }
 
     /*class*/ func fetchMusicDataFromXML() -> MDSMusic? {

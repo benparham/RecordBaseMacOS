@@ -7,72 +7,9 @@
 //
 
 
-// TODO: MDSSong should contain parent: MDSAlbum. MDSAlbum has parent: MDSArtist. This way can go directly from child to parent without searching via id
-
-
 // TODO: Should probably make array of albums and array of songs actually hold options. Then, after deleting a song or album, can set that space in the array to nil. Getters an still return non-options, just have an assert to check for nil and then return <whatever>!. No one should be trying to access an id that was deleted anyway
 
 import Foundation
-
-
-// ================= IDS ==================
-//
-//@objc protocol MDSDataId {
-//    var idx: Int { get }
-//    optional var parentId: MDSDataId { get }
-//}
-//
-//class MDSArtistId: MDSDataId, Equatable {
-//    var idx: Int
-//    init(artistIdx: Int) {
-//        self.idx = artistIdx
-//    }
-//}
-//func ==(lhs: MDSArtistId, rhs:MDSArtistId) -> Bool {
-//    return lhs.idx == rhs.idx
-//}
-//
-//class MDSAlbumId: MDSDataId, Equatable {
-//    var idx: Int
-//    var parentId: MDSArtistId? // TODO: this optional
-//    
-//    init(albumIdx: Int, artistId: MDSArtistId) {
-//        self.idx = albumIdx
-//        self.parentId = artistId
-//    }
-//    
-//    var artistId: MDSArtistId {
-//        return parentId!
-//    }
-//}
-//func ==(lhs: MDSAlbumId, rhs:MDSAlbumId) -> Bool {
-//    return (lhs.idx == rhs.idx &&
-//            lhs.parentId == rhs.parentId)
-//}
-//
-//class MDSSongId: MDSDataId {
-//    var idx: Int
-//    var parentId: MDSAlbumId? // TODO: and this one
-//    init(songIdx: Int, albumId: MDSAlbumId) {
-//        self.idx = songIdx
-//        self.parentId = albumId
-//    }
-//    
-//    var albumId: MDSAlbumId {
-//        return parentId!
-//    }
-//    
-//    var artistId: MDSArtistId {
-//        return albumId.artistId
-//    }
-//}
-//func ==(lhs: MDSSongId, rhs:MDSSongId) -> Bool {
-//    return (lhs.idx == rhs.idx &&
-//            lhs.parentId == rhs.parentId)
-//}
-
-
-// ================= DATA ==================
 
 enum MDSDataType: Int {
     case MDSSongType = 0
@@ -81,22 +18,10 @@ enum MDSDataType: Int {
     case MDSMusicType = 3
 }
 
+// ================= Protocols ==================
+
 protocol MDSData {
-//    typealias IdType: MDSDataId
-//    typealias ParentIdType: MDSDataId
-//    typealias ParentType: MDSData
-//    typealias SelfType: MDSData
-    
-//    var id: IdType { get }
-    
-//    class func dataFromParentElement(#parentId: ParentIdType?, parentElement: NSXMLElement) -> [SelfType]
-    
-//    class func dataFromParentElement(parentElement: NSXMLElement, parent: ParentType?) -> [SelfType]
-    
-    
     var type: MDSDataType { get }
-    
-//    func cast() -> SelfType
     
     func asString() -> String
 }
@@ -104,21 +29,18 @@ protocol MDSData {
 protocol MDSSongContainer: MDSData {
     var numSongs: Int { get }
     func getSong(#idx: Int) -> MDSSong
-//    func getSong(#songId: MDSSongId, ignoreAssert: Bool) -> MDSSong
     func getSongs() -> MDSIterator<MDSSong>
 }
 
 protocol MDSAlbumContainer: MDSData {
     var numAlbums: Int { get }
     func getAlbum(#idx: Int) -> MDSAlbum
-//    func getAlbum(#albumId: MDSAlbumId, ignoreAssert: Bool) -> MDSAlbum
     func getAlbums() -> MDSIterator<MDSAlbum>
 }
 
 protocol MDSArtistContainer: MDSData {
     var numArtists: Int { get }
     func getArtist(#idx: Int) -> MDSArtist
-//    func getArtist(#artistId: MDSArtistId, ignoreAssert: Bool) -> MDSArtist
     func getArtists() -> MDSIterator<MDSArtist>
 }
 
@@ -131,6 +53,8 @@ protocol MDSAlbumChild {
 }
 
 
+// ================= Music Classes ==================
+
 class MDSMusic: MDSSongContainer, MDSAlbumContainer, MDSArtistContainer {
     
     // ----- Unique music properties
@@ -139,10 +63,6 @@ class MDSMusic: MDSSongContainer, MDSAlbumContainer, MDSArtistContainer {
     
     // ----- Conform to MDSData protocol
     var type: MDSDataType = .MDSMusicType
-    
-//    func cast() -> MDSMusic {
-//        return self
-//    }
     
     func asString() -> String {
         return "Music"
@@ -154,10 +74,6 @@ class MDSMusic: MDSSongContainer, MDSAlbumContainer, MDSArtistContainer {
     func getArtist(#idx: Int) -> MDSArtist {
         return artists[idx]
     }
-    
-//    func getArtist(#artistId: MDSArtistId, ignoreAssert: Bool = false) -> MDSArtist {
-//        return artists[artistId.idx]
-//    }
     
     func getArtists() -> MDSIterator<MDSArtist> {
         return MDSBaseIterator<MDSArtist>(list: artists)
@@ -181,10 +97,6 @@ class MDSMusic: MDSSongContainer, MDSAlbumContainer, MDSArtistContainer {
         var newIdx = idx - (prevAlbumIdx + 1)
         return getArtist(idx: curArtistIdx).getAlbum(idx: newIdx)
     }
-    
-//    func getAlbum(#albumId: MDSAlbumId, ignoreAssert: Bool = false) -> MDSAlbum {
-//        return getArtist(artistId: albumId.artistId).getAlbum(albumId: albumId, ignoreAssert: true)
-//    }
     
     func getAlbums() -> MDSIterator<MDSAlbum> {
         return MDSParentIterator<MDSArtist, MDSAlbum>(
@@ -214,10 +126,6 @@ class MDSMusic: MDSSongContainer, MDSAlbumContainer, MDSArtistContainer {
         return getArtist(idx: curArtistIdx).getSong(idx: newIdx)
     }
     
-//    func getSong(#songId: MDSSongId, ignoreAssert: Bool = false) -> MDSSong {
-//        return getAlbum(albumId: songId.albumId).getSong(songId: songId, ignoreAssert: true)
-//    }
-    
     func getSongs() -> MDSIterator<MDSSong> {
         return MDSParentIterator<MDSArtist, MDSSong>(
             list: artists,
@@ -240,8 +148,6 @@ class MDSMusic: MDSSongContainer, MDSAlbumContainer, MDSArtistContainer {
     
     convenience init(musicElement element: NSXMLElement) {
         assert(element.name == "music")
-        
-//        self.init(artists: MDSArtist.dataFromParentElement(parentId: nil, parentElement: element))
         self.init(artists: MDSArtist.artistsFromMusicElement(element))
     }
 }
@@ -266,28 +172,7 @@ class MDSArtist: MDSSongContainer, MDSAlbumContainer {
     }
     
     // ----- Conform to MDSData protocol
-//    var id: MDSArtistId
-    
-//    class func dataFromParentElement(#parentId: MDSDataId?, parentElement: NSXMLElement) -> [MDSArtist] {
-//        assert(parentId == nil)
-//        
-//        var artistIdx: Int = 0
-//        var result = [MDSArtist]()
-//        
-//        for artistElement in parentElement.elementsForName("artist") as [NSXMLElement] {
-//            var newId = MDSArtistId(artistIdx: artistIdx)
-//            result.append(MDSArtist(id: newId, artistElement: artistElement))
-//            artistIdx++
-//        }
-//        
-//        return result
-//    }
-    
     var type: MDSDataType = .MDSArtistType
-    
-//    func cast() -> MDSArtist {
-//        return self
-//    }
     
     func asString() -> String {
         return "Artist: " + name
@@ -300,11 +185,6 @@ class MDSArtist: MDSSongContainer, MDSAlbumContainer {
     func getAlbum(#idx: Int) -> MDSAlbum {
         return albums[idx]
     }
-    
-//    func getAlbum(#albumId: MDSAlbumId, ignoreAssert: Bool = false) -> MDSAlbum {
-//        if !ignoreAssert { assert(albumId.artistId == id) }
-//        return getAlbum(idx: albumId.idx)
-//    }
     
     func getAlbums() -> MDSIterator<MDSAlbum> {
         return MDSBaseIterator<MDSAlbum>(list: albums)
@@ -331,11 +211,6 @@ class MDSArtist: MDSSongContainer, MDSAlbumContainer {
         return getAlbum(idx: curAlbumIdx).getSong(idx: newIdx)
     }
     
-//    func getSong(#songId: MDSSongId, ignoreAssert: Bool = false) -> MDSSong {
-//        if !ignoreAssert { assert(songId.artistId == id) }
-//        return getAlbum(albumId: songId.albumId).getSong(songId: songId, ignoreAssert: true)
-//    }
-    
     func getSongs() -> MDSIterator<MDSSong> {
         return MDSParentIterator<MDSAlbum, MDSSong>(
             list: albums,
@@ -348,8 +223,7 @@ class MDSArtist: MDSSongContainer, MDSAlbumContainer {
     
     
     // ----- Initializers
-    init(/*id: MDSArtistId,*/ name: String, albums: [MDSAlbum]) {
-//        self.id = id
+    init(name: String, albums: [MDSAlbum]) {
         self.name = name
         self.albums = albums
         self.numAlbums = self.albums.count
@@ -358,13 +232,11 @@ class MDSArtist: MDSSongContainer, MDSAlbumContainer {
         }
     }
     
-    convenience init(/*id: MDSArtistId,*/ artistElement element: NSXMLElement) {
+    convenience init(artistElement element: NSXMLElement) {
         assert(element.name == "artist")
         
         self.init(
-//            id: id,
             name: element.elementsForName("name")[0].stringValue,
-//            albums: MDSAlbum.dataFromParentElement(parentId: id, parentElement: element)
             albums: [MDSAlbum]()
         )
         
@@ -379,9 +251,6 @@ class MDSArtist: MDSSongContainer, MDSAlbumContainer {
 class MDSAlbum: MDSSongContainer, MDSArtistChild {
     // ----- Unique album properties and methods
     var title: String
-//    var artistId: MDSArtistId {
-//        return id.artistId
-//    }
     
     private var songs: [MDSSong]
     
@@ -398,28 +267,7 @@ class MDSAlbum: MDSSongContainer, MDSArtistChild {
     }
     
     // ----- Conform to MDSData protocol
-//    var id: MDSAlbumId
-    
-//    class func dataFromParentElement(#parentId: MDSArtistId?, parentElement: NSXMLElement) -> [MDSAlbum] {
-//        assert(parentId != nil)
-//        
-//        var albumIdx: Int = 0
-//        var result = [MDSAlbum]()
-//        
-//        for albumElement in parentElement.elementsForName("album") as [NSXMLElement] {
-//            var newId = MDSAlbumId(albumIdx: albumIdx, artistId: parentId!)
-//            result.append(MDSAlbum(id: newId, albumElement: albumElement))
-//            albumIdx++
-//        }
-//        
-//        return result
-//    }
-    
     var type: MDSDataType = .MDSAlbumType
-    
-//    func cast() -> MDSAlbum {
-//        return self
-//    }
     
     func asString() -> String {
         return "Album: " + title
@@ -433,11 +281,6 @@ class MDSAlbum: MDSSongContainer, MDSArtistChild {
         return songs[idx]
     }
     
-//    func getSong(#songId: MDSSongId, ignoreAssert: Bool = false) -> MDSSong {
-//        if !ignoreAssert { assert(songId.albumId == id) }
-//        return getSong(idx: songId.idx)
-//    }
-    
     func getSongs() -> MDSIterator<MDSSong> {
         return MDSBaseIterator<MDSSong>(list: songs)
     }
@@ -448,19 +291,17 @@ class MDSAlbum: MDSSongContainer, MDSArtistChild {
     
     
     // ----- Initializers
-    init(/*id: MDSAlbumId*/ parentArtist: MDSArtist, title: String, songs: [MDSSong]) {
-//        self.id = id
+    init(parentArtist: MDSArtist, title: String, songs: [MDSSong]) {
         self.artist = parentArtist
         self.title = title
         self.songs = songs
         self.numSongs = self.songs.count
     }
     
-    convenience init(/*id: MDSAlbumId*/ parentArtist: MDSArtist, albumElement element: NSXMLElement) {
+    convenience init(parentArtist: MDSArtist, albumElement element: NSXMLElement) {
         assert(element.name == "album")
         
         self.init(
-//            id: id,
             parentArtist: parentArtist,
             title: element.elementsForName("title")[0].stringValue,
             songs: [MDSSong]()
@@ -475,12 +316,13 @@ class MDSSong: MDSAlbumChild, MDSArtistChild {
     
     // ----- Unique song properties and methods
     var title: String
-//    var albumId: MDSAlbumId {
-//        return id.albumId
-//    }
-//    var artistId: MDSArtistId {
-//        return id.artistId
-//    }
+    var fileName: String
+    
+    var filePath: String {
+        get {
+            return artist.name + "/" + album.title + "/" + fileName
+        }
+    }
     
     class func songsFromAlbumElement(albumElement: NSXMLElement, parentAlbum: MDSAlbum) -> [MDSSong] {
         var songIdx: Int = 0
@@ -496,29 +338,8 @@ class MDSSong: MDSAlbumChild, MDSArtistChild {
     
     
     // ----- Conform to MDSData protocol
-//    var id: MDSSongId
-    
-//    class func dataFromParentElement(#parentId: MDSAlbumId?, parentElement: NSXMLElement) -> [MDSSong] {
-//        assert (parentId != nil)
-//        
-//        var songIdx: Int = 0
-//        var result = [MDSSong]()
-//        
-//        for songElement in parentElement.elementsForName("song") as [NSXMLElement] {
-//            var newId = MDSSongId(songIdx: songIdx, albumId: parentId!)
-//            result.append(MDSSong(id: newId, songElement: songElement))
-//            songIdx++
-//        }
-//        
-//        return result
-//    }
-    
     var type: MDSDataType = .MDSSongType
-    
-//    func cast() -> MDSSong {
-//        return self
-//    }
-    
+
     func asString() -> String {
         return "Song: " + title
     }
@@ -530,17 +351,20 @@ class MDSSong: MDSAlbumChild, MDSArtistChild {
     var artist: MDSArtist
     
     // ----- Initializers
-    init(/*id: MDSSongId*/ parentAlbum: MDSAlbum, title: String) {
-//        self.id = id
+    init(parentAlbum: MDSAlbum, title: String, fileName: String) {
         self.album = parentAlbum
         self.artist = self.album.artist
         self.title = title
+        self.fileName = fileName
     }
     
-    convenience init(/*id: MDSSongId*/ parentAlbum: MDSAlbum, songElement element: NSXMLElement) {
+    convenience init(parentAlbum: MDSAlbum, songElement element: NSXMLElement) {
         assert(element.name == "song")
         
-        self.init(parentAlbum: parentAlbum, title: element.elementsForName("title")[0].stringValue)
+        self.init(parentAlbum: parentAlbum,
+                  title: element.elementsForName("title")[0].stringValue,
+                  fileName: element.elementsForName("fileName")[0].stringValue
+        )
     }
 }
 

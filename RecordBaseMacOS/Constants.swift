@@ -8,6 +8,8 @@
 
 import Foundation
 
+let musicDirectory = "music"
+
 let prefsKeyStorageUrl: String = "storageUrl"
 
 // NOT YET SUPPORTED = AAARRRRRGGGGGGGHH!!!

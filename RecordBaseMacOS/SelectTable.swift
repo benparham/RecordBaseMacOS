@@ -35,6 +35,13 @@ class SelectTable: NSObject {
     init(tableView: NSTableView, musicRoot: MDSSongContainer) {
         self.tableView = tableView
         self.musicRoot = musicRoot
+        
+        tableView.doubleAction = "doubleClick:"
+    }
+    
+    
+    func doubleClick(sender: AnyObject?) {
+        println("Double click test successfull")
     }
     
     
@@ -104,10 +111,15 @@ class SelectTable: NSObject {
     
     
     // ====================== User Action Response =====================
-    
-    // Respond to row selection
-    func rowSelected() {
-        println("Select table view selected, row: \(tableView.selectedRow)")
+
+    func getSelectedSong() -> MDSSong? {
+        if tableView.selectedRow < 0 {
+            return nil
+        }
+        
+        var selectedRow = tableView.rowViewAtRow(tableView.selectedRow, makeIfNecessary: false) as SelectTableRowView
+        
+        return selectedRow.data
     }
     
     func updateMusicRoot(newRoot: MDSSongContainer) {

@@ -61,20 +61,12 @@ class FilterTable: NSObject {
     }
     
     func tableView(rowViewForRow row: Int) -> FilterTableRowView? {
-        
-//        var type: MDSDataType!
-//        var dataId: MDSDataId!
-        
         var container: MDSSongContainer!
         
         switch curFilterOption {
             case .Artist:
-//                type = .MDSArtistType
-//                dataId = musicRoot.getArtist(idx: row).id
                 container = musicRoot.getArtist(idx: row)
             case .Album:
-//                type = .MDSAlbumType
-//                dataId = musicRoot.getAlbum(idx: row).id
                 container = musicRoot.getAlbum(idx: row)
             case .None:
                 Helper.printError("Request for filter table row when filter option is None")
@@ -93,7 +85,6 @@ class FilterTable: NSObject {
         }
         
         return result
-        
     }
     
     func tableView(viewForTableColumn tableColumn: NSTableColumn, row: Int) -> NSView? {
@@ -117,55 +108,14 @@ class FilterTable: NSObject {
         result!.textField?.stringValue = text
         
         return result
-        
-//        var text: String!
-//        switch curFilterOption {
-//        case .Artist:
-//            text = rowView.data.
-//        case .Album:
-//            assert(rowView.type == MDSDataType.MDSAlbumType)
-//            text = musicRoot.getAlbum(albumId: rowView.dataId as MDSAlbumId).title
-//        case .None:
-//            Helper.printError("Recieved request for a filter table cell view while filter option is none")
-//            return nil
-//        default:
-//            Helper.printError("Unknown enum value")
-//            return nil
-//        }
-//        
-//        var result = tableView.makeViewWithIdentifier(cellId, owner: self) as? NSTableCellView
-//        
-//        assert(result != nil)
-//        
-//        result!.textField?.stringValue = text
-//        
-//        return result
     }
     
     // ====================== User Action Response =====================
     
-    func getSelectedSongContainer() -> MDSSongContainer? {
+    func getSelectedSongContainer() -> MDSSongContainer {
         var selectedRow = tableView.rowViewAtRow(tableView.selectedRow, makeIfNecessary: false) as FilterTableRowView
         
         return selectedRow.data
-        
-//        var container: MDSSongContainer!
-//        switch curFilterOption {
-//        case .Artist:
-//            assert(selectedRow.type == .MDSArtistType)
-//            container = musicRoot.getArtist(artistId: selectedRow.dataId as MDSArtistId)
-//        case .Album:
-//            assert(selectedRow.type == .MDSAlbumType)
-//            container = musicRoot.getAlbum(albumId: selectedRow.dataId as MDSAlbumId)
-//        case .None:
-//            Helper.printError("Request for selected filter row when filter option is None")
-//            return nil
-//        default:
-//            Helper.printError("Unknown filter option")
-//            return nil
-//        }
-//        
-//        return container
     }
     
     // Returns true if none was selected, false otherwise

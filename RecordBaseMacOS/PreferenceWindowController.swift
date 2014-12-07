@@ -37,10 +37,10 @@ class PreferenceWindowController: NSWindowController {
         super.windowDidLoad()
         
         // Require a single NSBox to be in contentView immediately after load
-        assert(self.window?.contentView?.subviews.count == 1)
+        assert(self.window?.contentView.subviews.count == 1)
         
         // Store reference to NSBox in var parentBox
-        parentBox = self.window?.contentView?.subviews[0] as? NSBox
+        parentBox = self.window?.contentView.subviews[0] as? NSBox
         assert(parentBox != nil)
         
         // Initialize views with constraints and push into dictionary

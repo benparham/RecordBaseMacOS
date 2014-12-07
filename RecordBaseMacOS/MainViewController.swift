@@ -7,8 +7,7 @@
 //
 
 import Cocoa
-
-// TODO: make a separate filter row view that can only contain a songcontainer. Will make everything much easier. Cause fuck casting right?
+import AVFoundation
 
 class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     
@@ -27,6 +26,8 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
     
     var selectTable: SelectTable!
     var filterTable: FilterTable!
+    
+    var audioPlayer: AVAudioPlayer?
     
     // ====================== Controller =====================
     
@@ -87,6 +88,18 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         return nil
     }
     
+    // ====================== Play/Pause Control =====================
+    @IBAction
+    func playPauseButtonClicked(sender: AnyObject) {
+        println("Play/Pause was clicked!")
+        
+        if let song = selectTable.getSelectedSong() {
+            audioPlayer = playSong(song)
+        } else {
+            println("No song selected for playback")
+        }
+    }
+    
     // ====================== Segmented Control =====================
     
     @IBAction
@@ -104,10 +117,12 @@ class MainViewController: NSViewController, NSTableViewDelegate, NSTableViewData
         
         switch tableView.identifier {
         case filterTable.tableId:
-            var container: MDSSongContainer = filterTable.getSelectedSongContainer()!
+            var container: MDSSongContainer = filterTable.getSelectedSongContainer()
             selectTable.updateMusicRoot(container)
         case selectTable.tableId:
-            selectTable.rowSelected()
+            if let song = selectTable.getSelectedSong() {
+//                println("Song selected with file name: \(song.fileName)")
+            }
         default:
             Helper.printError("Recieved message from unknown table view")
         }

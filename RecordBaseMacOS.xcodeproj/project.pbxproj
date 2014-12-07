@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		800010151A14348900BB6B8F /* MusicPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800010141A14348900BB6B8F /* MusicPlayback.swift */; };
 		800C4DE91A0D68B000B3AB47 /* FilterTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800C4DE81A0D68B000B3AB47 /* FilterTable.swift */; };
 		800C4DEB1A0D68C600B3AB47 /* SelectTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800C4DEA1A0D68C600B3AB47 /* SelectTable.swift */; };
 		803FA0561A10004D0068D05F /* SelectTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803FA0551A10004D0068D05F /* SelectTableRowView.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		800010141A14348900BB6B8F /* MusicPlayback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicPlayback.swift; sourceTree = "<group>"; };
 		800C4DE81A0D68B000B3AB47 /* FilterTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterTable.swift; sourceTree = "<group>"; };
 		800C4DEA1A0D68C600B3AB47 /* SelectTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTable.swift; sourceTree = "<group>"; };
 		803FA0551A10004D0068D05F /* SelectTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTableRowView.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			children = (
 				80C30A241A035080004CFE6C /* MusicDataStructures.swift */,
 				80C30A261A035255004CFE6C /* MusicXML.swift */,
+				800010141A14348900BB6B8F /* MusicPlayback.swift */,
 			);
 			name = "Music Business";
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				800C4DEB1A0D68C600B3AB47 /* SelectTable.swift in Sources */,
 				80BCA01D19FEB1820076EA65 /* AppDelegate.swift in Sources */,
 				80C30A2B1A03658E004CFE6C /* Helper.swift in Sources */,
+				800010151A14348900BB6B8F /* MusicPlayback.swift in Sources */,
 				803FA0561A10004D0068D05F /* SelectTableRowView.swift in Sources */,
 				80C30A271A035255004CFE6C /* MusicXML.swift in Sources */,
 				80CB677A1A00CAA30088FB81 /* PreferenceGeneralViewController.swift in Sources */,
